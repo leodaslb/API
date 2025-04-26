@@ -1,4 +1,4 @@
-iimport pymysql
+import pymysql
 import os
 
 def get_db_connection():
