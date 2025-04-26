@@ -1,13 +1,21 @@
-import pymysql
+iimport pymysql
+import os
 
 def get_db_connection():
+    # Acessando as variáveis de ambiente corretamente
+    host = os.getenv("MYSQL_HOST")  
+    user = os.getenv("MYSQL_USER")  
+    password = os.getenv("MYSQL_PASSWORD")  
+    db = os.getenv("MYSQL_DATABASE")  
+    port = int(os.getenv("MYSQL_PORT", 3306)) 
+
+    # Conectando ao banco de dados
     conn = pymysql.connect(
-        host="localhost",
-        database="df_banco",
-        port=3306,
-        user="root",
-        password="fatec",
-        cursorclass=pymysql.cursors.DictCursor
+        host=host,
+        user=user,
+        password=password,
+        db=db,
+        port=port
     )
     return conn
 
