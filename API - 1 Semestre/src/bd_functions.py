@@ -2,12 +2,14 @@ import pymysql
 import os
 
 def get_db_connection():
-    # Acessando as variáveis de ambiente corretamente
-    host = os.getenv("MYSQL_HOST")  
-    user = os.getenv("MYSQL_USER")  
-    password = os.getenv("MYSQL_PASSWORD")  
-    db = os.getenv("MYSQL_DATABASE")  
-    port = int(os.getenv("MYSQL_PORT", 3306)) 
+    # Definindo as variáveis diretamente no código para testar a conexão
+    host = "mysql.railway.internal"  # Host do banco de dados fornecido pelo Railway
+    user = "root"  # Usuário do banco de dados
+    password = "yxMUYClFgePIrjDDIqNFIetjSuPBAwmc"  # Senha do banco de dados
+    db = "railway"  # Nome do banco de dados
+    port = 3306  # Porta do banco de dados, geralmente 3306 para MySQL
+
+    print(f"Conectando ao banco de dados: {host}, na porta {port}")
 
     # Conectando ao banco de dados
     conn = pymysql.connect(
