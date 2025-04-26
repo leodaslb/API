@@ -139,7 +139,7 @@ def initdb():
                         cursor.execute(statement)
                     except Exception as e:
                         print(f"Erro no statement: {statement}")
-                            raise e
+                        raise e
 
         conn.commit()
         cursor.close()
