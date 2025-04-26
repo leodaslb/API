@@ -22,7 +22,8 @@ def init_db():
                     statement = statement.strip()
                     if statement:  # Se o comando não estiver vazio
                         try:
-                            cursor.execute(statement)  # Executa a query
+                            # Utilize placeholders (%s) para passar parâmetros
+                            cursor.execute(statement)
                         except pymysql.MySQLError as e:
                             print(f"Erro ao executar a query: {statement}")
                             print(f"Erro: {e}")
@@ -35,6 +36,10 @@ def init_db():
     finally:
         if conn:
             conn.close()  # Garantir que a conexão será fechada
+
+if __name__ == "__main__":
+    init_db()
+
 
 if __name__ == "__main__":
     init_db()
