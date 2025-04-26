@@ -135,7 +135,12 @@ def initdb():
             sql = f.read()
             for statement in sql.split(";"):
                 if statement.strip():
-                    cursor.execute(statement)
+                    try:
+                        cursor.execute(statement)
+                    except Exception as e:
+                        print(f"Erro no statement: {statement}")
+                            raise e
+
         conn.commit()
         cursor.close()
         conn.close()
