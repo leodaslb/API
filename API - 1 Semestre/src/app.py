@@ -123,6 +123,25 @@ def pesquisa():
 
     return render_template("pesquisa.html", dados=dados)
 
+
+@app.route('/initdb')
+def initdb():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        with open("ranking_municipios.sql", "r") as f:
+            sql = f.read()
+            for statement in sql.split(";"):
+                if statement.strip():
+                    cursor.execute(statement)
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"status": "banco inicializado com sucesso"})
+    except Exception as e:
+        return jsonify({"erro": str(e)})
+
 ## Área de Igão.
 pdfs = {
     1: 'pdfs/as.txt',
