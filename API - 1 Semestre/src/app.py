@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import pymysql
 from pymysql.cursors import DictCursor
 from bd_functions import get_db_connection, executar_consulta
