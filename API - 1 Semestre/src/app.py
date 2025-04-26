@@ -130,7 +130,8 @@ def initdb():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        with open("ranking_municipios.sql", "r") as f:
+        sql_path = os.path.join(os.path.dirname(__file__), "ranking_municipios.sql")
+        with open(sql_path, "r", encoding="utf-8") as f:
             sql = f.read()
             for statement in sql.split(";"):
                 if statement.strip():
