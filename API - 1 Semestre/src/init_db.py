@@ -9,7 +9,9 @@ def init_db():
             user=os.getenv("MYSQLUSER"),
             password=os.getenv("MYSQLPASSWORD"),
             db=os.getenv("MYSQLDATABASE"),
-            port=int(os.getenv("MYSQLPORT"))
+            port=int(os.getenv("MYSQLPORT")),
+            charset='utf8mb4',
+            
         )
 
         with conn.cursor() as cursor:
