@@ -4,6 +4,7 @@ from pymysql.cursors import DictCursor
 from bd_functions import get_db_connection, executar_consulta
 import plotly.graph_objs as go
 from plotly.offline import plot
+import os
 
 
 
@@ -144,4 +145,7 @@ def carregar_arquivo():
 ## fechamento
 
 if __name__ == "__main__":
-    app.run(debug=True)
+
+port = int(os.environ.get('PORT', 5000))
+
+app.run(host='0.0.0.0', port=port, debug=True)
