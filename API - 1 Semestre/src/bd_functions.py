@@ -1,27 +1,24 @@
 import pymysql
 import os
+import urllib.parse
 
 def get_db_connection():
-    
-    host = "mysql-epnp.railway.internal"  
-    user = "root" 
-    password = "StICbNaYmEOiCZYCKlqOvnhgzJzcMSBQ"  
-    db = "railway"  
-    port = 3306 
+    db_url = os.getenv("DATABASE_URL")
+    if db_url is None:
+        raise Exception("DATABASE_URL não encontrada")
 
-    print(f"Conectando ao banco de dados: {host}, na porta {port}")
+    parsed_url = urllib.parse.urlparse(db_url)
 
-    # Conectando ao banco de dados
     conn = pymysql.connect(
-        host=host,
-        user=user,
-        password=password,
-        db=db,
-        port=port, 
-        charset='utf8mb4'
-        
+        host=parsed_url.hostname,
+        user=parsed_url.username,
+        password=parsed_url.password,
+        db=parsed_url.path.lstrip('/'),  # remove a primeira "/" do nome do banco
+        port=parsed_url.port,
     )
     return conn
+
+
 
 def executar_consulta(query, params=None, dict_cursor=True):
     conn = get_db_connection()
