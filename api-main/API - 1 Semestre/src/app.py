@@ -48,7 +48,7 @@ def rankings():
         )
         #Gera graficos a partir da Consulta 
         if dados_fob:
-            produtos = [p if len(p) <= 30 else p[:27] + "..." for p in [item["PRODUTO"] for item in dados_fob]]  #limita tamanho da string de Produto
+            produtos = [p if len(p) <= 22 else p[:19] + "..." for p in [item["PRODUTO"] for item in dados_fob]]  #limita tamanho da string de Produto
             valores = [item["VALOR"] for item in dados_fob]  
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='indianred',  
                             hovertext=[item["PRODUTO"] for item in dados_fob],hoverinfo="text+y")]) #
@@ -62,7 +62,7 @@ def rankings():
         )
 
         if dados_valor_agregado:
-            produtos = [p if len(p) <= 30 else p[:27] + "..." for p in [item["PRODUTO"] for item in dados_valor_agregado]]
+            produtos = [p if len(p) <= 22 else p[:19] + "..." for p in [item["PRODUTO"] for item in dados_valor_agregado]]
             valores = [item["VALOR"] for item in dados_valor_agregado]
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='royalblue',
                             hovertext=[item["PRODUTO"] for item in dados_valor_agregado],hoverinfo="text+y")])
@@ -88,7 +88,7 @@ def rankings():
         )
 
         if dados_volume:
-            produtos = [p if len(p) <= 30 else p[:27] + "..." for p in [item["PRODUTO"] for item in dados_volume]]
+            produtos = [p if len(p) <= 22 else p[:19] + "..." for p in [item["PRODUTO"] for item in dados_volume]]
             valores = [item["VALOR"] for item in dados_volume]
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='orange',
                                     hovertext=[item["PRODUTO"] for item in dados_volume],hoverinfo="text+y")])
