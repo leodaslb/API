@@ -25,20 +25,6 @@ def artigos():
 
 @app.route("/rankings", methods=["GET", "POST"])
 def rankings():
-    municipios = [row["MUN"] for row in executar_consulta(
-        "SELECT DISTINCT MUN FROM ranking_municipios where mun <> 'None' ORDER BY MUN"
-    )]
-
-    graficos = {
-        "vl_fob": "",
-        "valor_agregado": "",
-        "evolucao_fob": "",
-        "kg_liquido": ""
-    }
-    municipio = None
-    if request.method == "POST":
-        municipio = request.form.get("municipio")
-def rankings():
     #puxando municipios para o select
     municipios = [row["MUN"] for row in executar_consulta(
         "SELECT DISTINCT MUN FROM ranking_municipios where mun <> 'None' ORDER BY MUN"
