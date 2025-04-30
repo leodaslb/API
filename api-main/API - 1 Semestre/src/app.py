@@ -7,8 +7,6 @@ from plotly.offline import plot
 import os
 
 
-
-
 app = Flask(__name__)
 
 @app.route("/")
@@ -28,7 +26,7 @@ def artigos():
 @app.route("/rankings", methods=["GET", "POST"])
 def rankings():
     municipios = [row["MUN"] for row in executar_consulta(
-        "SELECT DISTINCT MUN FROM ranking_municipios ORDER BY MUN"
+        "SELECT DISTINCT MUN FROM ranking_municipios where mun <> 'None' ORDER BY MUN"
     )]
 
     graficos = {
@@ -37,7 +35,23 @@ def rankings():
         "evolucao_fob": "",
         "kg_liquido": ""
     }
+    municipio = None
+    if request.method == "POST":
+        municipio = request.form.get("municipio")
+def rankings():
+    #puxando municipios para o select
+    municipios = [row["MUN"] for row in executar_consulta(
+        "SELECT DISTINCT MUN FROM ranking_municipios where mun <> 'None' ORDER BY MUN"
+    )]
 
+    graficos = {
+        "vl_fob": "",
+        "valor_agregado": "",
+        "evolucao_fob": "",
+        "kg_liquido": ""
+    }
+    municipio = None
+    #Municipio ao ser selecionado faz as consulta no banco
     if request.method == "POST":
         municipio = request.form.get("municipio")
 
@@ -46,13 +60,13 @@ def rankings():
             "SELECT PRODUTO, VALOR FROM ranking_municipios WHERE MUN = %s AND tipo_ranking = 'TOP_VL_FOB' ORDER BY VALOR DESC LIMIT 5",
             params=(municipio,)
         )
-
+        #Gera graficos a partir da Consulta 
         if dados_fob:
-            produtos = [p if len(p) <= 30 else p[:27] + "..." for p in [item["PRODUTO"] for item in dados_fob]]
-            valores = [item["VALOR"] for item in dados_fob]
-            fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='indianred', 
-                            hovertext=[item["PRODUTO"] for item in dados_fob],hoverinfo="text+y")])
-            fig.update_layout(title="Top 5 por VL_FOB", xaxis_title="Produto", yaxis_title="VL_FOB", hovermode ='x')
+            produtos = [p if len(p) <= 30 else p[:27] + "..." for p in [item["PRODUTO"] for item in dados_fob]]  #limita tamanho da string de Produto
+            valores = [item["VALOR"] for item in dados_fob]  
+            fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='indianred',  
+                            hovertext=[item["PRODUTO"] for item in dados_fob],hoverinfo="text+y")]) #
+            fig.update_layout(title="Top 5 por VL_FOB", xaxis_title="Produto",width = 540, height=410, yaxis_title="VL_FOB", hovermode ='x')
             graficos["vl_fob"] = plot(fig, output_type='div')   
 
         # 2. Top Valor Agregado Médio
@@ -66,7 +80,7 @@ def rankings():
             valores = [item["VALOR"] for item in dados_valor_agregado]
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='royalblue',
                             hovertext=[item["PRODUTO"] for item in dados_valor_agregado],hoverinfo="text+y")])
-            fig.update_layout(title="Top 5 por Valor Agregado Médio", xaxis_title="Produto", yaxis_title="Valor Agregado")
+            fig.update_layout(title="Top 5 por Valor Agregado Médio", xaxis_title="Produto",width = 540, height=410, yaxis_title="Valor Agregado",hovermode ='x')
             graficos["valor_agregado"] = plot(fig, output_type='div')
 
         # 3. Evolução Anual do VL_FOB
@@ -78,7 +92,7 @@ def rankings():
             anos = [item["ANO"] for item in evolucao]
             totais = [item["TOTAL"] for item in evolucao]
             fig = go.Figure([go.Scatter(x=anos, y=totais, mode='lines+markers', line=dict(color='green'))])
-            fig.update_layout(title="Evolução Anual do VL_FOB", xaxis_title="Ano", yaxis_title="Soma VL_FOB")
+            fig.update_layout(title="Evolução Anual do VL_FOB", xaxis_title="Ano",width = 540, height=410, yaxis_title="Soma VL_FOB",)
             graficos["evolucao_fob"] = plot(fig, output_type='div')
 
         # 4. Top Volume (KG_LIQUIDO)
@@ -91,11 +105,11 @@ def rankings():
             produtos = [p if len(p) <= 30 else p[:27] + "..." for p in [item["PRODUTO"] for item in dados_volume]]
             valores = [item["VALOR"] for item in dados_volume]
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='orange',
-                                    hovertext=[item["PRODUTO"] for item in dados_valor_agregado],hoverinfo="text+y")])
-            fig.update_layout(title="Top 5 por Volume (KG Líquido)", xaxis_title="Produto", yaxis_title="Volume")
+                                    hovertext=[item["PRODUTO"] for item in dados_volume],hoverinfo="text+y")])
+            fig.update_layout(title="Top 5 por Volume (KG Líquido)", xaxis_title="Produto",width = 540, height=410, yaxis_title="Volume",hovermode='x')
             graficos["kg_liquido"] = plot(fig, output_type='div')
 
-    return render_template("rankings.html", municipios=municipios, graficos=graficos)
+    return render_template("rankings.html", municipios=municipios, graficos=graficos,municipio=municipio)
 
 
 
@@ -124,29 +138,7 @@ def pesquisa():
     return render_template("pesquisa.html", dados=dados)
 
 
-@app.route('/initdb')
-def initdb():
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
 
-        sql_path = os.path.join(os.path.dirname(__file__), "ranking_municipios.sql")
-        with open(sql_path, "r", encoding="utf-8") as f:
-            sql = f.read()
-            for statement in sql.split(";"):
-                if statement.strip():
-                    try:
-                        cursor.execute(statement)
-                    except Exception as e:
-                        print(f"Erro no statement: {statement}")
-                        raise e
-
-        conn.commit()
-        cursor.close()
-        conn.close()
-        return jsonify({"status": "banco inicializado com sucesso"})
-    except Exception as e:
-        return jsonify({"erro": str(e)})
 
 ## Área de Igão.
 pdfs = {
