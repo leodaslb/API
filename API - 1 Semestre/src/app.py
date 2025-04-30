@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import pymysql
 from pymysql.cursors import DictCursor
 from bd_functions import get_db_connection, executar_consulta
 import plotly.graph_objs as go
 from plotly.offline import plot
+import os
 
 app = Flask(__name__)
 
