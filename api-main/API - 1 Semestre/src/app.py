@@ -52,7 +52,7 @@ def rankings():
             valores = [item["VALOR"] for item in dados_fob]  
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='indianred',  
                             hovertext=[item["PRODUTO"] for item in dados_fob],hoverinfo="text+y")]) #
-            fig.update_layout(title="Top 5 por VL_FOB", xaxis_title="Produto",width = 540, height=410, yaxis_title="VL_FOB", hovermode ='x')
+            fig.update_layout(title={'text':"Top 5 por VL_FOB",'x':0.5}, xaxis_title="Produto",width = 540, height=410, yaxis_title="VL_FOB", hovermode ='x')
             graficos["vl_fob"] = plot(fig, output_type='div')   
 
         # 2. Top Valor Agregado Médio
@@ -66,7 +66,7 @@ def rankings():
             valores = [item["VALOR"] for item in dados_valor_agregado]
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='royalblue',
                             hovertext=[item["PRODUTO"] for item in dados_valor_agregado],hoverinfo="text+y")])
-            fig.update_layout(title="Top 5 por Valor Agregado Médio", xaxis_title="Produto",width = 540, height=410, yaxis_title="Valor Agregado",hovermode ='x')
+            fig.update_layout(title={'text':"Top 5 por Valor Agregado Médio",'x':0.5}, xaxis_title="Produto",width = 540, height=410, yaxis_title="Valor Agregado",hovermode ='x')
             graficos["valor_agregado"] = plot(fig, output_type='div')
 
         # 3. Evolução Anual do VL_FOB
@@ -78,7 +78,7 @@ def rankings():
             anos = [item["ANO"] for item in evolucao]
             totais = [item["TOTAL"] for item in evolucao]
             fig = go.Figure([go.Scatter(x=anos, y=totais, mode='lines+markers', line=dict(color='green'))])
-            fig.update_layout(title="Evolução Anual do VL_FOB", xaxis_title="Ano",width = 540, height=410, yaxis_title="Soma VL_FOB",)
+            fig.update_layout(title={'text':"Evolução Anual do VL_FOB",'x':0.5}, xaxis_title="Ano",width = 540, height=410, yaxis_title="Soma VL_FOB",)
             graficos["evolucao_fob"] = plot(fig, output_type='div')
 
         # 4. Top Volume (KG_LIQUIDO)
@@ -92,7 +92,7 @@ def rankings():
             valores = [item["VALOR"] for item in dados_volume]
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='orange',
                                     hovertext=[item["PRODUTO"] for item in dados_volume],hoverinfo="text+y")])
-            fig.update_layout(title="Top 5 por Volume (KG Líquido)", xaxis_title="Produto",width = 540, height=410, yaxis_title="Volume",hovermode='x')
+            fig.update_layout(title={'text':"Top 5 por Volume (KG Líquido)", 'x':0.5}, xaxis_title="Produto",width = 540, height=410, yaxis_title="Volume",hovermode='x')
             graficos["kg_liquido"] = plot(fig, output_type='div')
 
     return render_template("rankings.html", municipios=municipios, graficos=graficos,municipio=municipio)
