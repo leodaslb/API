@@ -51,7 +51,8 @@ def rankings():
             produtos = [p if len(p) <= 22 else p[:19] + "..." for p in [item["PRODUTO"] for item in dados_fob]]  #limita tamanho da string de Produto
             valores = [item["VALOR"] for item in dados_fob]  
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='indianred',  
-                            hovertext=[item["PRODUTO"] for item in dados_fob],hoverinfo="text+y")]) #
+                            hovertext=["<br>".join([item["PRODUTO"][i:i+60] for i in range(0, len(item["PRODUTO"]), 60)]) 
+                                        for item in dados_fob],hoverinfo="text+y")])
             fig.update_layout(title={'text':"Top 5 por VL_FOB",'x':0.5}, xaxis_title="Produto",width = 540, height=410, yaxis_title="VL_FOB", hovermode ='x')
             graficos["vl_fob"] = plot(fig, output_type='div')   
 
@@ -65,7 +66,8 @@ def rankings():
             produtos = [p if len(p) <= 22 else p[:19] + "..." for p in [item["PRODUTO"] for item in dados_valor_agregado]]
             valores = [item["VALOR"] for item in dados_valor_agregado]
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='royalblue',
-                            hovertext=[item["PRODUTO"] for item in dados_valor_agregado],hoverinfo="text+y")])
+                            hovertext=["<br>".join([item["PRODUTO"][i:i+60] for i in range(0, len(item["PRODUTO"]), 60)]) 
+                                        for item in dados_fob],hoverinfo="text+y")])
             fig.update_layout(title={'text':"Top 5 por Valor Agregado Médio",'x':0.5}, xaxis_title="Produto",width = 540, height=410, yaxis_title="Valor Agregado",hovermode ='x')
             graficos["valor_agregado"] = plot(fig, output_type='div')
 
@@ -91,7 +93,8 @@ def rankings():
             produtos = [p if len(p) <= 22 else p[:19] + "..." for p in [item["PRODUTO"] for item in dados_volume]]
             valores = [item["VALOR"] for item in dados_volume]
             fig = go.Figure([go.Bar(x=produtos, y=valores, marker_color='orange',
-                                    hovertext=[item["PRODUTO"] for item in dados_volume],hoverinfo="text+y")])
+                                    hovertext=["<br>".join([item["PRODUTO"][i:i+60] for i in range(0, len(item["PRODUTO"]), 60)]) 
+                                        for item in dados_fob],hoverinfo="text+y")])
             fig.update_layout(title={'text':"Top 5 por Volume (KG Líquido)", 'x':0.5}, xaxis_title="Produto",width = 540, height=410, yaxis_title="Volume",hovermode='x')
             graficos["kg_liquido"] = plot(fig, output_type='div')
 
